@@ -1,0 +1,152 @@
+
+select 
+ 
+count(1) count_BMO, 
+ 
+sum( balance ))  balance_BMO,
+sum(if(payment_status='90+',balance,0))  balance_deli_BMO,
+sum(if(active_flag='Y',balance,0))  balance_active_BMO,
+sum(credit_limit))  credit_limit_BMO,
+sum( active_flag='Y',credit_limit,0))  credit_limit_active_BMO,
+sum( payment_status='90+') count_deli_BMO
+from pi2_development_db.pi2_trade_n t
+left join (
+  select fi_name, fi_id, year_month, peer_id
+  from pi2_development_db.pi2_customer_n 
+ 
+) c
+on t.fi_id = c.fi_id
+and c.year_month = greatest( 201609, t.year_month)
+where 
+ t.vintage_month between ${fromMonth} and ${toMonth}
+ and t.pi2_product='NCC'
+and c.fi_name = "BANK OF MONTREAL"
+
+select count(*) from 
+(select  fi_id
+from pi2_customer_n   
+where fi_name ="BANK OF MONTREAL" and year_month=201812) c1 
+join (select  fi_id
+from pi2_customer_n  
+where fi_name ="BANK OF MONTREAL" and year_month=201811) c2
+on c1.fi_id = c2.fi_id
+
+
+
+select 
+--chart 25 count
+sum(c.fi_name = "BANK OF MONTREAL" and t.joint_flag='P') count_BMO, 
+sum(c.fi_name = "BANK OF MONTREAL" and t.joint_flag='P' and active_flag='Y') count_active_BMO, 
+sum(if(fi_name = "BANK OF MONTREAL" and t.joint_flag='P',balance,0))  balance_BMO,
+sum(if(fi_name = "BANK OF MONTREAL" and t.joint_flag='P' and payment_status='90+',balance,0))  balance_deli_BMO,
+sum(if(fi_name = "BANK OF MONTREAL" and t.joint_flag='P'  and active_flag='Y',balance,0))  balance_active_BMO,
+sum(if(fi_name = "BANK OF MONTREAL" and t.joint_flag='P',credit_limit,0))  credit_limit_BMO,
+sum(if(fi_name = "BANK OF MONTREAL" and t.joint_flag='P' and active_flag='Y',credit_limit,0))  credit_limit_active_BMO,
+sum(c.fi_name = "BANK OF MONTREAL" and t.joint_flag='P' and payment_status='90+') count_deli_BMO
+from pi2_development_db.pi2_trade_n t
+left join (
+  select fi_name, fi_id, year_month, peer_id
+  from pi2_development_db.pi2_customer_n 
+ 
+) c
+on t.fi_id = c.fi_id
+and c.year_month = greatest( 201609, t.year_month)
+where 
+ t.vintage_month between ${fromMonth} and ${toMonth}
+ and t.pi2_product='NCC'
+and c.fi_name = "BANK OF MONTREAL"
+
+select count(*) from 
+(select  fi_id
+from pi2_customer_n   
+where fi_name ="BANK OF MONTREAL" and year_month=201812) c1 
+join (select  fi_id
+from pi2_customer_n  
+where fi_name ="BANK OF MONTREAL" and year_month=201811) c2
+on c1.fi_id = c2.fi_id
+
+
+
+select vintage_month,
+count(1) count_BMO, 
+ 
+sum( balance )   balance_BMO,
+sum(if(payment_status='90+',balance,0))  balance_deli_BMO,
+sum(if(active_flag='Y',balance,0))  balance_active_BMO,
+sum(credit_limit)   credit_limit_BMO,
+sum( if(active_flag='Y',credit_limit,0))  credit_limit_active_BMO,
+sum( payment_status='90+') count_deli_BMO
+from pi2_development_db.pi2_trade_n t
+left join (
+  select fi_name, fi_id, year_month, peer_id
+  from pi2_development_db.pi2_customer_n 
+ 
+) c
+on t.fi_id = c.fi_id
+and c.year_month = greatest( 201609, t.year_month)
+where 
+--t.year_month=${year_month}
+ --t.vintage_month = ${vintageMonth}
+ t.account_age=0
+ and t.pi2_product='NCC'
+and c.fi_name = "BANK OF MONTREAL"
+group by t.vintage_month
+order by t.vintage_month;
+
+
+
+select t.year_month,
+count(1) count_BMO, 
+ 
+sum( balance )   balance_BMO,
+sum(if(payment_status='90+',balance,0))  balance_deli_BMO,
+sum(if(active_flag='Y',balance,0))  balance_active_BMO,
+sum(credit_limit)   credit_limit_BMO,
+sum( if(active_flag='Y',credit_limit,0))  credit_limit_active_BMO,
+sum( payment_status='90+') count_deli_BMO
+from pi2_development_db.pi2_trade_n t
+left join (
+  select fi_name, fi_id, year_month, peer_id
+  from pi2_development_db.pi2_customer_n 
+ 
+) c
+on t.fi_id = c.fi_id
+and c.year_month = greatest( 201609, t.year_month)
+where 
+--t.year_month=${year_month}
+ --t.vintage_month = ${vintageMonth}
+ t.account_age=0
+ and t.pi2_product='NCC'
+and c.fi_name = "BANK OF MONTREAL"
+group by t.year_month
+order by t.year_month;
+
+
+
+select  
+sum(if(t.year_month=201810 and t.account_age=0,1,0)) count_newOpen_201810, 
+sum(if(t.year_month=201810 and t.account_age=1,1,0)) count_accountAge_1_201810,  
+sum(if(t.year_month=201811 and t.account_age=1,1,0)) count_accountAge_1_201811  
+ 
+from pi2_development_db.pi2_trade_n t
+left join (
+  select fi_name, fi_id, year_month, peer_id
+  from pi2_development_db.pi2_customer_n 
+ 
+) c
+on t.fi_id = c.fi_id
+and c.year_month = greatest( 201609, t.year_month)
+where 
+--t.year_month=${year_month}
+ --t.vintage_month = ${vintageMonth}
+-- t.account_age=0
+   t.pi2_product='NCC'
+and c.fi_name = "BANK OF MONTREAL"
+group by t.year_month
+order by t.year_month
+
+ 
+ 
+
+ 
+ 
